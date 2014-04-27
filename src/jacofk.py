@@ -7,8 +7,6 @@ Created, tested and maintained by Rohit for RBE 501 Final Project with JACO arm
 import rospy
 import copy
 from numpy import *
-from numpy.linalg import norm
-from numpy.linalg import pinv
 from math import *
 from sensor_msgs.msg import JointState
 import tf
