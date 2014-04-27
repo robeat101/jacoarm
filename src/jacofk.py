@@ -60,7 +60,7 @@ class jacofk:
                            jacofk.alpha[i],
                            jacofk.d[i]))
         
-        T_final = T[0]*T[1] *T[2] *T[3] *T[4] *T[5] 
+        T_final = self.TBtoJB * self.TJBtoJ1 * T[0]*T[1] *T[2] *T[3] *T[4] *T[5] 
         print T_final
         return T_final
         
@@ -95,6 +95,8 @@ class jacofk:
         # Initialize Node
         rospy.init_node('rbansal_srao_jacofk')
         
+        self.TBtoJB = self.transform(pi/2, 0, 0, 0) 
+        self.TJBtoJ1= self.transform(0, 0, 0, 0.028)
         # Setup publisher and Subscriber
         #self.endeffectorpose = rospy.Publisher('/map_OE', OccupancyGrid, latch=True)
         self.jointconfig = rospy.Subscriber('/jaco/joint_state', JointState , self.calcFK, queue_size=1)
