@@ -83,6 +83,10 @@ class trajectory():
         a0 = (msg.acc_x ,msg.acc_y ,msg.acc_z )
         af = (msg.acc_xf,msg.acc_yf,msg.acc_zf)
         
+        self.t0 = msg.t0
+        self.tf = msg.tf
+        self.tstep = msg.tstep
+        
         xd = self.axisD(p0, pf, v0, vf, a0, af, 0)
         yd = self.axisD(p0, pf, v0, vf, a0, af, 1)
         zd = self.axisD(p0, pf, v0, vf, a0, af, 2)
@@ -92,10 +96,6 @@ class trajectory():
         self.xcoeff = Ainv * xd
         self.ycoeff = Ainv * yd
         self.zcoeff = Ainv * zd
-        
-        self.t0 = t0
-        self.tf = tf
-        self.tstep = tstep
         
         self.genTrajectories()
         
@@ -109,14 +109,16 @@ class trajectory():
     def __init__(self,):
         # Initialize Node
         rospy.init_node('rbansal_srao_Trajectory')
-        
+        self.t0 = 0
+        self.tf = 0
+        self.tstep = 0
         # Setup publisher and Subscriber
         #self.optmap_pub = rospy.Publisher('/map_Opt', OccupancyGrid, latch=True)
-        traj_params_sub = rospy.Subscriber('/rbe_jacoapi/', traj_callback ,queue_size=1)
+        traj_params_sub = rospy.Subscriber('/rbe_jacoapi/', traj_params, self.traj_callback ,queue_size=1)
         
         
 # This is the program's main function
 if __name__ == '__main__':
-    node = trajectory((0,0,0), (1,0,.8), (0,0,0),(0,0,0),(0,0,0),(0,0,0))
+    node = trajectory()
     node.genTrajectories()
     rospy.spin()
