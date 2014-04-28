@@ -9,6 +9,7 @@ from numpy import *
 from math import *
 from sensor_msgs.msg import JointState
 from jacoTF import *
+from jacoarm.msg import traj_params
 
 """
 The purpose of this node is to create and generate a set of waypoints for the
