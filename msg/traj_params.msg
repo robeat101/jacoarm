@@ -16,3 +16,6 @@ float32 acc_z
 float32 acc_xf
 float32 acc_yf
 float32 acc_zf
+float32 t0
+float32 tf
+float32 tstep
