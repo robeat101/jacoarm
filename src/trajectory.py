@@ -74,6 +74,7 @@ class trajectory():
         
     def traj_callback(self, msg):
         
+        print "Callback was invoked"
         p0 = (msg.pos_x ,msg.pos_y ,msg.pos_z )
         pf = (msg.pos_xf,msg.pos_yf,msg.pos_zf)
         
@@ -91,13 +92,15 @@ class trajectory():
         yd = self.axisD(p0, pf, v0, vf, a0, af, 1)
         zd = self.axisD(p0, pf, v0, vf, a0, af, 2)
         
-        A = self.buildA(t0, tf)
+        A = self.buildA(self.t0, self.tf)
         Ainv = linalg.pinv(A)
         self.xcoeff = Ainv * xd
         self.ycoeff = Ainv * yd
         self.zcoeff = Ainv * zd
         
         self.genTrajectories()
+        
+        print "Calculated Trajectories"
         
     
     
@@ -106,7 +109,7 @@ class trajectory():
             yield start
             start += step
         
-    def __init__(self,):
+    def __init__(self):
         # Initialize Node
         rospy.init_node('rbansal_srao_Trajectory')
         self.t0 = 0
@@ -114,11 +117,10 @@ class trajectory():
         self.tstep = 0
         # Setup publisher and Subscriber
         #self.optmap_pub = rospy.Publisher('/map_Opt', OccupancyGrid, latch=True)
-        traj_params_sub = rospy.Subscriber('/rbe_jacoapi/', traj_params, self.traj_callback ,queue_size=1)
+        traj_params_sub = rospy.Subscriber('/rbe_jacoapi', traj_params, self.traj_callback ,queue_size=1)
         
         
 # This is the program's main function
 if __name__ == '__main__':
     node = trajectory()
-    node.genTrajectories()
     rospy.spin()
