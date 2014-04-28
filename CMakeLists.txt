@@ -47,6 +47,7 @@ message_generation
  add_message_files(
    FILES
    traj_params.msg
+   trajectory.msg
  )
 
 ## Generate services in the 'srv' folder
