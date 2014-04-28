@@ -72,18 +72,16 @@ class trajectory():
                            (self.vdt(i, True) * self.zcoeff).item(0), 
                            (self.adt(i, True) * self.zcoeff).item(0)])
         
+    def traj_callback(self, msg):
         
-    def xfrange(self, start, stop, step):
-        while not rospy.is_shutdown() and start < stop:
-            yield start
-            start += step
+        p0 = (msg.pos_x ,msg.pos_y ,msg.pos_z )
+        pf = (msg.pos_xf,msg.pos_yf,msg.pos_zf)
         
-    def __init__(self, p0, pf, v0, vf, a0, af, t0 = 0, tf=5,tstep = 0.05):
-        # Initialize Node
-        rospy.init_node('rbansal_srao_Trajectory')
+        v0 = (msg.vel_x ,msg.vel_y ,msg.vel_z )
+        vf = (msg.vel_xf,msg.vel_yf,msg.vel_zf)
         
-        # Setup publisher and Subscriber
-        #self.optmap_pub = rospy.Publisher('/map_Opt', OccupancyGrid, latch=True)
+        a0 = (msg.acc_x ,msg.acc_y ,msg.acc_z )
+        af = (msg.acc_xf,msg.acc_yf,msg.acc_zf)
         
         xd = self.axisD(p0, pf, v0, vf, a0, af, 0)
         yd = self.axisD(p0, pf, v0, vf, a0, af, 1)
@@ -98,6 +96,24 @@ class trajectory():
         self.t0 = t0
         self.tf = tf
         self.tstep = tstep
+        
+        self.genTrajectories()
+        
+    
+    
+    def xfrange(self, start, stop, step):
+        while not rospy.is_shutdown() and start < stop:
+            yield start
+            start += step
+        
+    def __init__(self,):
+        # Initialize Node
+        rospy.init_node('rbansal_srao_Trajectory')
+        
+        # Setup publisher and Subscriber
+        #self.optmap_pub = rospy.Publisher('/map_Opt', OccupancyGrid, latch=True)
+        traj_params_sub = rospy.Subscriber('/rbe_jacoapi/', traj_callback ,queue_size=1)
+        
         
 # This is the program's main function
 if __name__ == '__main__':
