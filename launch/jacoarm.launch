@@ -1,0 +1,6 @@
+<launch>
+    <node pkg="jacoarm" name="rbansal_srao_follow_traj" type="follow_traj.py" output="screen"/>
+ 	<node pkg="jacoarm" name="rbansal_srao_Trajectory" type="trajectory.py" output="screen"/>
+    <node pkg="jacoarm" name="rbansal_srao_traj_param_publisher" type="traj_param_publisher.py" output="screen"/>
+</launch>
+

@@ -101,6 +101,11 @@ class Trajectory():
             
         traj_msg = trajectorymsg()
         
+        traj_msg.t0 = self.t0
+        traj_msg.tf = self.tf
+        traj_msg.tstep = self.tstep
+               
+        
         traj_msg.posx_traj = px_traj
         traj_msg.velx_traj = vx_traj
         traj_msg.accx_traj = ax_traj

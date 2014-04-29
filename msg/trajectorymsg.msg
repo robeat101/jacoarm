@@ -1,3 +1,7 @@
+float64 t0
+float64 tf
+float64 tstep
+
 float64[] posx_traj
 float64[] velx_traj
 float64[] accx_traj

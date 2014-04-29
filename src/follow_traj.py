@@ -18,7 +18,9 @@ class follow_traj():
             rospy.logwarn("The lengths of the trajectories don't match. Aborting")
             return
         else:
+            rospy.sleep(rospy.Duration(msg.t0, 0))
             for i in xrange(0, len(px_traj)):
+                rospy.sleep(rospy.Duration(msg.tstep, 0))
                 if(rospy.is_shutdown()):
                     rospy.logwarn("Shutdown request received")
                     return 
