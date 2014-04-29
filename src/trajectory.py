@@ -10,14 +10,14 @@ from math import *
 from sensor_msgs.msg import JointState
 from jacoTF import *
 from jacoarm.msg import traj_params
-from jacoarm.msg import trajectory
+from jacoarm.msg import trajectorymsg
 
 """
 The purpose of this node is to create and generate a set of waypoints for the
 JACO arm to follow, i.e. to create a discretized trajectory. 
 """
 
-class trajectory():
+class Trajectory():
     
     def axisD(self, p0, pf, v0, vf, a0, af, i):
         axisD = [p0[i], v0[i], a0[i], pf[i], vf[i], af[i]]
@@ -62,19 +62,19 @@ class trajectory():
         xTraj = []
         yTraj = []
         zTraj = []
-
-	px_traj = []
-	vx_traj = []
-	ax_traj = []
-
-	py_traj = []
-	vy_traj = []
-	ay_traj = []
-
-	pz_traj = []
-	vz_traj = []
-	az_traj = []
-
+        
+        px_traj = []
+        vx_traj = []
+        ax_traj = []
+        
+        py_traj = []
+        vy_traj = []
+        ay_traj = []
+        
+        pz_traj = []
+        vz_traj = []
+        az_traj = []
+        
         for i in self.xfrange(self.t0, self.tf, self.tstep):
              xTraj.append([(self.pdt(i, True) * self.xcoeff).item(0), 
                            (self.vdt(i, True) * self.xcoeff).item(0), 
@@ -85,28 +85,37 @@ class trajectory():
              zTraj.append([(self.pdt(i, True) * self.zcoeff).item(0), 
                            (self.vdt(i, True) * self.zcoeff).item(0), 
                            (self.adt(i, True) * self.zcoeff).item(0)])
-	
-	for i in xrange(0, len(xTraj), 1):
-	     px_traj.append(xTraj[i][0])
-	     vx_traj.append(xTraj[i][1])
-	     ax_traj.append(xTraj[i][2])
-
-	     py_traj.append(yTraj[i][0])
-	     vy_traj.append(yTraj[i][1])
-	     ay_traj.append(yTraj[i][2])
-
-	     pz_traj.append(zTraj[i][0])
-	     vz_traj.append(zTraj[i][1])
-	     az_traj.append(zTraj[i][2])
-
-	print xTraj 
-	print yTraj     
-	print zTraj 
-
-	print px_traj
-	print vx_traj 
-	print ax_traj 	
-
+        
+        for i in xrange(0, len(xTraj), 1):
+            px_traj.append(xTraj[i][0])
+            vx_traj.append(xTraj[i][1])
+            ax_traj.append(xTraj[i][2])
+            
+            py_traj.append(yTraj[i][0])
+            vy_traj.append(yTraj[i][1])
+            ay_traj.append(yTraj[i][2])
+            
+            pz_traj.append(zTraj[i][0])
+            vz_traj.append(zTraj[i][1])
+            az_traj.append(zTraj[i][2])
+            
+        traj_msg = trajectorymsg()
+        
+        traj_msg.posx_traj = px_traj
+        traj_msg.velx_traj = vx_traj
+        traj_msg.accx_traj = ax_traj
+        
+        traj_msg.posy_traj = py_traj
+        traj_msg.vely_traj = vy_traj
+        traj_msg.accy_traj = ay_traj
+        
+        traj_msg.posz_traj = pz_traj
+        traj_msg.velz_traj = vz_traj
+        traj_msg.accz_traj = az_traj
+        
+        self.traj_pub.publish(traj_msg)
+        
+        
     def traj_callback(self, msg):
 
         print "Callback was invoked"
@@ -152,11 +161,11 @@ class trajectory():
         self.tf = 0
         self.tstep = 0
         # Setup publisher and Subscriber
-        #self.optmap_pub = rospy.Publisher('/map_Opt', OccupancyGrid, latch=True)
-        traj_params_sub = rospy.Subscriber('/rbe_jacoapi', traj_params, self.traj_callback ,queue_size=1)
+        self.traj_pub = rospy.Publisher('/rbe_jacoapi/trajectories', trajectorymsg, latch=True)
+        traj_params_sub = rospy.Subscriber('/rbe_jacoapi/traj_params', traj_params, self.traj_callback ,queue_size=1)
         
         
 # This is the program's main function
 if __name__ == '__main__':
-    node = trajectory()
+    node = Trajectory()
     rospy.spin()

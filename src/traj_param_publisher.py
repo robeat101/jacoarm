@@ -23,7 +23,7 @@ class traj_param_publisher():
         rospy.init_node('rbansal_srao_traj_param_publisher')
         
         # Setup publisher and Subscriber
-        self.pub = rospy.Publisher('/rbe_jacoapi', traj_params, latch=True)
+        self.pub = rospy.Publisher('/rbe_jacoapi/traj_params', traj_params, latch=True)
         
         self.msg = traj_params()
         self.msg.t0  = t0
