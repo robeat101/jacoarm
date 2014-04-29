@@ -18,7 +18,7 @@ class follow_traj():
             return
         else:
             for i in xrange(0, len(px_traj)):
-                if(rospy.is_shutdown())
+                if(rospy.is_shutdown()):
                     rospy.logwarn("Shutdown request received")
                     return 
                 self.pose_client(px_traj[i], py_traj[i], pz_traj[i])
