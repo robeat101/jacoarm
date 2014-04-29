@@ -62,6 +62,19 @@ class trajectory():
         xTraj = []
         yTraj = []
         zTraj = []
+
+	px_traj = []
+	vx_traj = []
+	ax_traj = []
+
+	py_traj = []
+	vy_traj = []
+	ay_traj = []
+
+	pz_traj = []
+	vz_traj = []
+	az_traj = []
+
         for i in self.xfrange(self.t0, self.tf, self.tstep):
              xTraj.append([(self.pdt(i, True) * self.xcoeff).item(0), 
                            (self.vdt(i, True) * self.xcoeff).item(0), 
@@ -72,9 +85,30 @@ class trajectory():
              zTraj.append([(self.pdt(i, True) * self.zcoeff).item(0), 
                            (self.vdt(i, True) * self.zcoeff).item(0), 
                            (self.adt(i, True) * self.zcoeff).item(0)])
-        
+	
+	for i in xrange(0, len(xTraj), 1):
+	     px_traj.append(xTraj[i][0])
+	     vx_traj.append(xTraj[i][1])
+	     ax_traj.append(xTraj[i][2])
+
+	     py_traj.append(yTraj[i][0])
+	     vy_traj.append(yTraj[i][1])
+	     ay_traj.append(yTraj[i][2])
+
+	     pz_traj.append(zTraj[i][0])
+	     vz_traj.append(zTraj[i][1])
+	     az_traj.append(zTraj[i][2])
+
+	print xTraj 
+	print yTraj     
+	print zTraj 
+
+	print px_traj
+	print vx_traj 
+	print ax_traj 	
+
     def traj_callback(self, msg):
-        
+
         print "Callback was invoked"
         p0 = (msg.pos_x ,msg.pos_y ,msg.pos_z )
         pf = (msg.pos_xf,msg.pos_yf,msg.pos_zf)
@@ -100,8 +134,9 @@ class trajectory():
         self.zcoeff = Ainv * zd
         
         self.genTrajectories()
-        
-        print "Calculated Trajectories"
+	
+	
+	print "Calculated Trajectories"
         
     
     
