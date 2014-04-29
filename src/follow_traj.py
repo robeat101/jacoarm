@@ -5,6 +5,7 @@ import rospy
 import actionlib
 import jaco_msgs.msg
 import sys
+from jacoarm.msg import trajectorymsg
 
 class follow_traj():
         
@@ -13,7 +14,7 @@ class follow_traj():
         py_traj = msg.posy_traj 
         pz_traj = msg.posz_traj 
         
-        if(len(px_traj) != len(py_traj) or len(px_traj) != len(zx_traj)):
+        if(len(px_traj) != len(py_traj) or len(px_traj) != len(pz_traj)):
             rospy.logwarn("The lengths of the trajectories don't match. Aborting")
             return
         else:
@@ -26,22 +27,22 @@ class follow_traj():
         
     def pose_client(self, x, y, z):
         
-        goal.pose.header.frame_id = "/jaco_api_origin"
+        self.goal.pose.header.frame_id = "/jaco_api_origin"
         
-        goal.pose.pose.orientation.x = -0.590686044496
-        goal.pose.pose.orientation.y = -0.519369415388
-        goal.pose.pose.orientation.z = 0.324703360925
-        goal.pose.pose.orientation.w = 0.525274342226
+        self.goal.pose.pose.orientation.x = -0.590686044496
+        self.goal.pose.pose.orientation.y = -0.519369415388
+        self.goal.pose.pose.orientation.z = 0.324703360925
+        self.goal.pose.pose.orientation.w = 0.525274342226
         
         
-        goal.pose.pose.position.x = x
-        goal.pose.pose.position.y = y
-        goal.pose.pose.position.z = z
+        self.goal.pose.pose.position.x = x
+        self.goal.pose.pose.position.y = y
+        self.goal.pose.pose.position.z = z
 
-        client.wait_for_server()
+        self.client.wait_for_server()
         rospy.loginfo("Connected to Pose server")
     
-        client.send_goal(goal)
+        self.client.send_goal(self.goal)
     
         return
     
@@ -62,9 +63,8 @@ class follow_traj():
 
 if __name__ == '__main__':
     try:
-        rospy.init_node('arm_pose_client')
-        result = pose_client()
-        rospy.loginfo("Result: %s", result)
+        node = follow_traj()
+	rospy.spin()
     except rospy.ROSInterruptException: 
         rospy.loginfo("Program interrupted before completion")
         

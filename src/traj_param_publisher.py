@@ -60,4 +60,4 @@ class traj_param_publisher():
         
 # This is the program's main function
 if __name__ == '__main__':
-    node = traj_param_publisher((0,0,0), (1,0,.8), (0,0,0),(0,0,0),(0,0,0),(0,0,0))
+    node = traj_param_publisher((0.21,-0.27,0.49), (0.4,0.1,0.7), (0,0,0),(0,0,0),(0,0,0),(0,0,0))
